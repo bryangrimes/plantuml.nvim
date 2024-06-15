@@ -5,16 +5,18 @@ local M = {}
 ---@field exit_codes { [number]: boolean }
 M.Runner = {}
 
----@param cmd string
----@param exit_codes? { [number]: boolean }
----@return job.Runner
+--- Creates a new Runner instance.
+--- @param cmd string The command to run.
+--- @param exit_codes? { [number]: boolean } The acceptable exit codes (optional).
+--- @return job.Runner The new runner instance.
 function M.Runner:new(cmd, exit_codes)
   self.__index = self
   return setmetatable({ cmd = cmd, exit_codes = exit_codes or { [0] = true } }, self)
 end
 
----@param on_success? fun(stdout: string[]): nil
----@return number
+--- Runs the command and handles the output and exit status.
+--- @param on_success? fun(stdout: string[]): nil The callback function to handle success (optional).
+--- @return number The PID of the started job.
 function M.Runner:run(on_success)
   local stderr
   local stdout

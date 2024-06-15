@@ -24,16 +24,6 @@ Install with [lazy.nvim](https://github.com/folke/lazy.nvim):
 }
 ```
 
-Install with [packer](https://github.com/wbthomason/packer.nvim):
-
-```lua
-use {
-  'bryangrimes/plantuml.nvim',
-  tag = '*',
-  config = function() require('plantuml').setup() end
-}
-```
-
 ## Dependencies
 
 To use this plugin, you'll need PlantUML installed. If using any of the external renderers, you'll

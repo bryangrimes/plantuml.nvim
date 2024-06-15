@@ -1,6 +1,6 @@
-local common = require('plantuml.common')
-local config = require('plantuml.config')
-local job = require('plantuml.job')
+local common = require("plantuml.common")
+local config = require("plantuml.config")
+local job = require("plantuml.job")
 
 local M = {}
 
@@ -17,10 +17,11 @@ local M = {}
 ---@field started boolean
 M.Renderer = {}
 
----@param options? image.RendererOptions
----@return image.Renderer
+--- Creates a new Renderer instance.
+--- @param options? image.RendererOptions The options for the renderer.
+--- @return image.Renderer The new renderer instance.
 function M.Renderer:new(options)
-  options = config.merge({ prog = 'feh', dark_mode = true }, options)
+  options = config.merge({ prog = "feh", dark_mode = true }, options)
 
   self.__index = self
   return setmetatable({
@@ -32,20 +33,18 @@ function M.Renderer:new(options)
   }, self)
 end
 
----@param file string
----@return nil
+--- Renders the PlantUML file and starts the viewer.
+--- @param file string The PlantUML file to render.
 function M.Renderer:render(file)
   common.create_image_runner(file, self.tmp_file, self.dark_mode, self.format):run(function(_)
     self:start_viewer()
   end)
 end
 
----@private
----@return nil
+--- Starts the viewer if it hasn't been started already.
 function M.Renderer:start_viewer()
-  -- Only start the viewer if it wasn't already started.
   if not self.started then
-    local cmd = string.format('%s %s', self.prog, self.tmp_file)
+    local cmd = string.format("%s %s", self.prog, self.tmp_file)
     job.Runner:new(cmd, {}):run(function(_)
       self.started = false
     end)
