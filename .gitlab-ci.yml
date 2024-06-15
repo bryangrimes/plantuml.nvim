@@ -1,0 +1,33 @@
+stages:
+  - lint
+  - test
+
+.config_fedora:
+  before_script:
+    - echo 'install_weak_deps=False' >> /etc/dnf/dnf.conf
+
+shellcheck:
+  extends: .config_fedora
+  stage: lint
+  image: fedora
+  script:
+    - dnf install -y shellcheck
+    - scripts/run-shellcheck.sh
+
+code_style:
+  stage: lint
+  image: fedora
+  script:
+    - scripts/install-emmy-lua-code-style.sh
+    # Fedora doesn't seem to add this path to 'PATH' by default for the root user.
+    - export PATH=${HOME}/.local/bin:${PATH}
+    - scripts/run-emmy-lua-code-style.sh
+
+tests:
+  extends: .config_fedora
+  stage: test
+  image: fedora
+  script:
+    - dnf install -y git-core neovim
+    - scripts/install-plenary.sh
+    - scripts/run-tests.sh
